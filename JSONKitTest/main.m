@@ -52,17 +52,18 @@ int main(int argc, const char * argv[]) {
     NSString* filePath = [[NSFileManager defaultManager] stringWithFileSystemRepresentation:argv[2]
                                                                                      length:strlen(argv[2])];
     NSData* jsonData = [NSData dataWithContentsOfFile:filePath];
-    JSONDecoder* decoder = [[JSONDecoder alloc] init];
+    JSONDecoder* decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionStrict];
     
     for (NSUInteger i = count; i > 0; --i) @autoreleasepool {
         const uint64_t start = mach_absolute_time();
-        id __attribute__((unused)) json = [decoder objectWithData:jsonData];
+        id __attribute__((unused)) json = [decoder objectWithData:jsonData error:NULL];
         uint64_t elapsed = mach_absolute_time() - start;
         if (data._min_latency > elapsed)
             data._min_latency = elapsed;
         if (data._max_latency < elapsed)
             data._max_latency = elapsed;
         data._cumul_latency += elapsed;
+        [decoder clearCache];
     }
     print_test_data("JSONKit decode", &data);
 
