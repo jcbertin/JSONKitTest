@@ -1,0 +1,4 @@
+[submodule "JSONKit"]
+	path = JSONKit
+	url = git@github.com:jcbertin/JSONKit.git
+	branch = master
